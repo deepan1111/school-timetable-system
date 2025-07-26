@@ -6,9 +6,11 @@ import TeachersDashboard from "./Pages/TeacherDashboard"
 import AdminDashboard from "./Pages/AdminDashboard"
 import TeacherSignup from './Pages/TeacherSignup'
 import AdminSignup from './Pages/AdminSignup'
-import StudentPage from "./Pages/StandardPage"
-
-
+import StandardPage from "./Pages/StandardPage"
+import SectionPage from './Pages/SectionPage'
+import NotFoundPage from './Components/NotFound'
+import { Navigate } from 'react-router-dom'
+import EditPage from './Pages/Edit'
 
 const App = () => {
   return (
@@ -20,7 +22,13 @@ const App = () => {
         <Route path="/signup/teacher-signup" element={<TeacherSignup />} />
         <Route path="/signup/admin-signup" element={<AdminSignup />} />
         <Route path="/teacher-dashboard" element={<TeachersDashboard />} />
-        <Route path="/standard/:std" element={<StudentPage />} />
+        <Route path="/standard/:std" element={<StandardPage />} />
+        <Route path="/standard/:std/:section" element={<SectionPage />} />
+        <Route path="/not-found" element={<NotFoundPage />} />
+<Route path="*" element={<Navigate to="/not-found" />} />
+<Route path="/standard/:std/edit" element={<EditPage />} />
+
+
       </Routes>
     </BrowserRouter>
   )

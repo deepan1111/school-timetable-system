@@ -1,21 +1,64 @@
 // import React from "react";
-// import { useParams } from "react-router-dom";
-// import ClassCard from "../Components/StandardCards";
+// import { useParams, useNavigate } from "react-router-dom";
 
 // const StandardPage = () => {
 //   const { std } = useParams();
-//   const sections = ["A", "B", "C"]; // Customize as needed
+//   const navigate = useNavigate();
+
+//   const standardSections = {
+//     "5th": ["A", "B"],
+//     "6th": ["A", "B", "C"],
+//     "7th": ["A", "B"],
+//     "8th": ["A", "B", "C", "D"],
+//     "9th": ["A", "B", "C"],
+//     "10th": ["A", "B", "C", "D", "E", "F"],
+//     "11th": ["A", "B"],
+//     "12th": ["A", "B", "C"]
+//   };
+
+//   const sections = standardSections[std] || [];
 
 //   return (
-//     <div className="min-h-screen bg-gray-100 p-8">
-//       <h2 className="text-2xl font-bold text-gray-800 mb-6">
-//         {std} Standard Sections
-//       </h2>
+//     <div className="min-h-screen bg-gradient-to-br from-white to-slate-100 p-6">
+//       {/* Back Button */}
+//       <div className="mb-6">
+//         <button
+//           onClick={() => navigate(-1)}
+//           className="px-4 py-2 bg-gray-200 hover:bg-gray-300 text-gray-800 font-medium rounded-lg shadow-sm"
+//         >
+//           ⬅ Back
+//         </button>
+//       </div>
 
-//       <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-6">
-//         {sections.map((section) => (
-//           <ClassCard key={section} standard={`${std} ${section}`} onClick={() => alert(`${std} ${section} clicked`)} />
-//         ))}
+//       {/* Main Card */}
+//       <div className="bg-white border rounded-2xl shadow-xl p-8 flex flex-col gap-6">
+//         {/* Header */}
+//         <h1 className="text-3xl font-bold text-center text-indigo-700">Class {std.toUpperCase()}</h1>
+
+//         <div className="flex flex-col lg:flex-row gap-8">
+//           {/* Section Cards */}
+//           <div className="flex-1 grid grid-cols-2 sm:grid-cols-3 gap-6">
+//             {sections.map((sec) => (
+//               <div
+//                 key={sec}
+//                 onClick={() => navigate(`/standard/${std}/${sec}`)}
+//                 className="bg-indigo-100 hover:bg-indigo-600 hover:text-white text-indigo-800 rounded-xl shadow-md cursor-pointer text-center py-6 text-xl font-semibold transition-all duration-200"
+//               >
+//                 {std} {sec}
+//               </div>
+//             ))}
+//           </div>
+
+//           {/* Divider + Button */}
+//           <div className="hidden lg:flex flex-col items-center justify-start border-l pl-6">
+//             <button
+//               onClick={() => navigate("/edit")}
+//               className="px-6 py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-medium rounded-lg shadow transition"
+//             >
+//               ✏️ Edit Sections
+//             </button>
+//           </div>
+//         </div>
 //       </div>
 //     </div>
 //   );
@@ -23,47 +66,69 @@
 
 // export default StandardPage;
 
+
 import React from "react";
-import { useParams } from "react-router-dom";
-import StandardsCard from "../components/StandardCards";
+import { useParams, useNavigate } from "react-router-dom";
 
 const StandardPage = () => {
-  const { std } = useParams();
-  // data/standards.js (or directly inside Dashboard.jsx if small project)
+  const { std } = useParams(); // e.g., "10th"
+  const navigate = useNavigate();
 
- const standardSections = {
-  "5th": ["A", "B"],
-  "6th": ["A", "B", "C"],
-  "7th": ["A", "B"],
-  "8th": ["A", "B", "C", "D"],
-  "9th": ["A", "B", "C"],
-  "10th": ["A", "B", "C", "D"],
-  "11th": ["A", "B"],
-  "12th": ["A", "B", "C"]
-};
+  const standardSections = {
+    "5th": ["A", "B"],
+    "6th": ["A", "B", "C"],
+    "7th": ["A", "B"],
+    "8th": ["A", "B", "C", "D"],
+    "9th": ["A", "B", "C"],
+    "10th": ["A", "B", "C", "D", "E", "F"],
+    "11th": ["A", "B"],
+    "12th": ["A", "B", "C"]
+  };
 
   const sections = standardSections[std] || [];
 
   return (
-    <div className="min-h-screen bg-gray-100 p-8">
-      <div className="flex justify-between items-center mb-6">
-        <h2 className="text-2xl font-bold text-gray-800">{std} Standard</h2>
-        <button onClick={() => window.history.back()} className="px-3 py-2 bg-gray-300 rounded-lg hover:bg-gray-400">Back</button>
+    <div className="min-h-screen bg-gradient-to-br from-white to-slate-100 p-6">
+      {/* Back Button */}
+      <div className="mb-6">
+        <button
+          onClick={() => navigate(-1)}
+          className="px-4 py-2 bg-gray-200 hover:bg-gray-300 text-gray-800 font-medium rounded-lg shadow-sm"
+        >
+          ⬅ Back
+        </button>
       </div>
 
-      {sections.length === 0 ? (
-        <p className="text-gray-600">No sections available for {std}</p>
-      ) : (
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-6">
-          {sections.map((sec) => (
-            <StandardsCard
-              key={sec}
-              standard={`${std} ${sec}`}
-              onClick={() => alert(`Clicked ${std} ${sec}`)}
-            />
-          ))}
+      {/* Main Card */}
+      <div className="bg-white border rounded-2xl shadow-xl p-8 flex flex-col gap-6">
+        {/* Header */}
+        <h1 className="text-3xl font-bold text-center text-indigo-700">Class {std.toUpperCase()}</h1>
+
+        <div className="flex flex-col lg:flex-row gap-8">
+          {/* Section Cards */}
+          <div className="flex-1 grid grid-cols-2 sm:grid-cols-3 gap-6">
+            {sections.map((sec) => (
+              <div
+                key={sec}
+                onClick={() => navigate(`/standard/${std}/${sec}`)}
+                className="bg-indigo-100 hover:bg-indigo-600 hover:text-white text-indigo-800 rounded-xl shadow-md cursor-pointer text-center py-6 text-xl font-semibold transition-all duration-200"
+              >
+                {std} {sec}
+              </div>
+            ))}
+          </div>
+
+          {/* Divider + Edit Button */}
+          <div className="hidden lg:flex flex-col items-center justify-start border-l pl-6">
+            <button
+              onClick={() => navigate(`/standard/${std}/edit`)}
+              className="px-6 py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-medium rounded-lg shadow transition"
+            >
+              ✏️ Edit Sections
+            </button>
+          </div>
         </div>
-      )}
+      </div>
     </div>
   );
 };
