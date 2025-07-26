@@ -6,6 +6,10 @@ import TeachersDashboard from "./Pages/TeacherDashboard"
 import AdminDashboard from "./Pages/AdminDashboard"
 import TeacherSignup from './Pages/TeacherSignup'
 import AdminSignup from './Pages/AdminSignup'
+import StudentPage from "./Pages/StandardPage"
+
+
+
 const App = () => {
   return (
     <BrowserRouter>
@@ -16,6 +20,7 @@ const App = () => {
         <Route path="/signup/teacher-signup" element={<TeacherSignup />} />
         <Route path="/signup/admin-signup" element={<AdminSignup />} />
         <Route path="/teacher-dashboard" element={<TeachersDashboard />} />
+        <Route path="/standard/:std" element={<StudentPage />} />
       </Routes>
     </BrowserRouter>
   )
