@@ -26,6 +26,7 @@ const App = () => {
         <Route path="/standard/:std/:section" element={<SectionPage />} />
         <Route path="/not-found" element={<NotFoundPage />} />
 <Route path="*" element={<Navigate to="/not-found" />} />
+
 <Route path="/standard/:std/edit" element={<EditPage />} />
 
 

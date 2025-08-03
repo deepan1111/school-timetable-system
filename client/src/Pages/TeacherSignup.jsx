@@ -75,17 +75,7 @@ export default function TeacherSignup() {
             />
           </div>
 
-          <div>
-            <label className="block text-gray-700 mb-1">Section</label>
-            <input
-              type="text"
-              name="section"
-              placeholder="e.g. 10A"
-              value={formData.section}
-              onChange={handleChange}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring focus:ring-blue-200"
-            />
-          </div>
+         
 
           <div>
             <label className="block text-gray-700 mb-1">Subject</label>

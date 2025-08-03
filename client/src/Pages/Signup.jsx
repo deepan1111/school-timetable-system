@@ -8,7 +8,7 @@ export default function SignupSelectionPage() {
       <div className="bg-white w-full max-w-md p-8 rounded-2xl shadow-lg text-center space-y-8">
 
         <div>
-          <h1 className="">EduSched</h1>
+          <h1 className="">School project</h1>
           <h1 className="text-2xl font-bold text-gray-800">Welcome to EduSched</h1>
           <p className="text-gray-500 text-sm mt-1">Select your role to sign up</p>
         </div>
