@@ -6,8 +6,8 @@ export default function TeacherSignup() {
   const [formData, setFormData] = useState({
     name: "",
     email: "",
+    phone:"",
     password: "",
-    section: "",
     subject: "",
   });
 
@@ -56,6 +56,19 @@ export default function TeacherSignup() {
               name="email"
               placeholder="Enter your email"
               value={formData.email}
+              onChange={handleChange}
+              required
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring focus:ring-blue-200"
+            />
+          </div>
+
+           <div>
+            <label className="block text-gray-700 mb-1">Phone number</label>
+            <input
+              type="text"
+              name="phone"
+              placeholder="Phone no : 9882X XXXXX"
+              value={formData.phone}
               onChange={handleChange}
               required
               className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring focus:ring-blue-200"

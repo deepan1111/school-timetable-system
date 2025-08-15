@@ -4,7 +4,6 @@ require('dotenv').config();
 
 const authRoutes = require('./routes/auth'); 
 const protectedRoutes = require('./routes/protectedRoutes'); 
-console.log('ADMIN_ACCESS_CODE:', process.env.ADMIN_ACCESS_CODE);
 
 app.use(express.json());
 
