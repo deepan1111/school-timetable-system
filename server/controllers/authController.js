@@ -4,40 +4,80 @@ const db = require('../db/db');
 require("dotenv").config();
 
 
+// const adminSignup = async (req, res) => {
+//   try {
+//     console.log('Received access_code:', req.body.access_code);
+//     console.log('Expected ADMIN_ACCESS_CODE:', process.env.ADMIN_ACCESS_CODE);
+
+//     const { full_name, email, password, access_code } = req.body;
+
+//     if (access_code !== process.env.ADMIN_ACCESS_CODE) {
+//       return res.status(403).json({ message: 'Invalid access code' });
+//     }
+
+//     const hash = await bcrypt.hash(password, 10);
+
+//     const [result] = await db.query(
+//       'INSERT INTO admin (full_name, email, password, access_code) VALUES (?, ?, ?, ?)',
+//       [full_name, email, hash, access_code]
+//     );
+
+//     res.status(201).json({ message: 'Admin registered successfully' });
+
+//   } catch (err) {
+//     if (err.code === 'ER_DUP_ENTRY') {
+//       return res.status(400).json({ message: 'Email already exists' });
+//     }
+//     res.status(500).json({ message: 'Database error', error: err });
+//   }
+// };
 const adminSignup = async (req, res) => {
   try {
-    console.log('Received access_code:', req.body.access_code);
-    console.log('Expected ADMIN_ACCESS_CODE:', process.env.ADMIN_ACCESS_CODE);
+    console.log("Received access_code:", req.body.access_code);
+    console.log("Expected ADMIN_ACCESS_CODE:", process.env.ADMIN_ACCESS_CODE);
 
     const { full_name, email, password, access_code } = req.body;
 
+    // ✅ check access code
     if (access_code !== process.env.ADMIN_ACCESS_CODE) {
-      return res.status(403).json({ message: 'Invalid access code' });
+      return res.status(403).json({ success: false, message: "Invalid access code" });
     }
 
+    // ✅ hash password
     const hash = await bcrypt.hash(password, 10);
 
+    // ✅ insert admin
     const [result] = await db.query(
-      'INSERT INTO admin (full_name, email, password, access_code) VALUES (?, ?, ?, ?)',
+      "INSERT INTO admin (full_name, email, password, access_code) VALUES (?, ?, ?, ?)",
       [full_name, email, hash, access_code]
     );
 
-    res.status(201).json({ message: 'Admin registered successfully' });
+    // ✅ generate JWT
+    const token = jwt.sign(
+      { id: result.insertId, role: "admin" },
+      process.env.JWT_SECRET,
+      { expiresIn: "1d" }
+    );
+
+    res.status(201).json({
+      success: true,
+      message: "Admin registered successfully",
+      token,
+      user: { id: result.insertId, full_name, email, role: "admin" }
+    });
 
   } catch (err) {
-    if (err.code === 'ER_DUP_ENTRY') {
-      return res.status(400).json({ message: 'Email already exists' });
+    if (err.code === "ER_DUP_ENTRY") {
+      return res.status(400).json({ success: false, message: "Email already exists" });
     }
-    res.status(500).json({ message: 'Database error', error: err });
+    res.status(500).json({ success: false, message: "Database error", error: err });
   }
 };
-
 
 const teacherSignup = async (req, res) => {
   const { name, email, phone, password, subject } = req.body;
 
   try {
-    // Hash password
     const hashedPassword = await bcrypt.hash(password, 10);
 
     // Find or create subject
@@ -57,25 +97,40 @@ const teacherSignup = async (req, res) => {
       subjectId = insertSubject.insertId;
     }
 
-    // Insert teacher (no role column)
+    // Insert teacher
     const [insertTeacher] = await db.query(
       "INSERT INTO teachers (name, email, phone, password, subject_id) VALUES (?, ?, ?, ?, ?)",
       [name, email, phone, hashedPassword, subjectId]
     );
 
-    // Create JWT (role hardcoded)
+    // Create JWT
     const token = jwt.sign(
       { id: insertTeacher.insertId, role: "teacher" },
       process.env.JWT_SECRET,
-      { expiresIn: "1h" }
+      { expiresIn: "1d" }
     );
 
-    res.status(201).json({ message: "Teacher registered successfully", token });
+    res.status(201).json({
+      success: true,
+      message: "Teacher registered successfully",
+      token,
+      user: {
+        id: insertTeacher.insertId,
+        name,
+        email,
+        phone,
+        subject
+      }
+    });
   } catch (err) {
     console.error("Error in teacherSignup:", err);
-    res.status(500).json({ error: "Something went wrong" });
+    res.status(500).json({ success: false, error: "Something went wrong" });
   }
 };
+
+
+
+
 
 
 
@@ -105,7 +160,7 @@ const commonLogin = async (req, res) => {
       const token = jwt.sign(
         { id: admin.admin_id, role: "admin" },
         process.env.JWT_SECRET,
-        { expiresIn: "1h" }
+        { expiresIn: "1d" }
       );
 
       return res.json({
@@ -137,7 +192,7 @@ const commonLogin = async (req, res) => {
     const token = jwt.sign(
       { id: teacher.teacher_id, role: "teacher" },
       process.env.JWT_SECRET,
-      { expiresIn: "1h" }
+      { expiresIn: "1d" }
     );
 
     return res.json({
@@ -145,7 +200,7 @@ const commonLogin = async (req, res) => {
       token,
       user: {
         id: teacher.teacher_id,
-        name: teacher.full_name, // <-- use the correct column
+        name: teacher.name, 
         email: teacher.email,
         role: "teacher",
       },

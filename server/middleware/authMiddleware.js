@@ -1,8 +1,12 @@
 
-const jwt = require("jsonwebtoken");
-require("dotenv").config();
 
-const verifyToken = (req, res, next) => {
+
+import jwt from "jsonwebtoken";
+import dotenv from "dotenv";
+
+dotenv.config();
+
+export const verifyToken = (req, res, next) => {
   const authHeader = req.headers["authorization"];
   if (!authHeader) return res.status(401).json({ message: "No token provided" });
 
@@ -16,27 +20,27 @@ const verifyToken = (req, res, next) => {
   });
 };
 
-const adminOnly = (req, res, next) => {
+export const adminOnly = (req, res, next) => {
   if (req.user.role !== "admin") {
     return res.status(403).json({ message: "Access denied: Admins only" });
   }
   next();
 };
 
-const teacherOnly = (req, res, next) => {
+export const teacherOnly = (req, res, next) => {
   if (req.user.role !== "teacher") {
     return res.status(403).json({ message: "Access denied: Teachers only" });
   }
   next();
 };
 
-const allowRoles = (...roles) => {
+export const allowRoles = (...roles) => {
   return (req, res, next) => {
     if (!roles.includes(req.user.role)) {
-      return res.status(403).json({ message: `Access denied: Only ${roles.join(", ")} allowed` });
+      return res
+        .status(403)
+        .json({ message: `Access denied: Only ${roles.join(", ")} allowed` });
     }
     next();
   };
 };
-
-module.exports = { verifyToken, adminOnly, teacherOnly, allowRoles };

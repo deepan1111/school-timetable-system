@@ -3,9 +3,9 @@ const ClassCard = ({ standard, onClick }) => {
   return (
       <div
       onClick={onClick}
-      className="bg-gradient-to-br from-indigo-500 to-violet-600 hover:scale-105 transition-transform duration-200 shadow-lg rounded-2xl w-32 h-32 flex items-center justify-center cursor-pointer"
+      className="bg-gradient-to-br bg-gray-300 hover:scale-105 transition-transform duration-200 shadow-lg rounded-[10px] w-32 h-12 flex items-center justify-center cursor-pointer"
     >
-      <h2 className="text-white text-2xl font-bold">{standard}</h2>
+      <h2 className="text-gray-500 text-[24px] font-bold">{standard}</h2>
     </div>
   );
 };

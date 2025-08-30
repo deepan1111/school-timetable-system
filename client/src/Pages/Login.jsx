@@ -1,38 +1,40 @@
-import { useState } from "react";
+
+import { useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
+import api from "../api/axios.js";
+import { AuthContext } from "../context/AuthContext.jsx";
 
 export default function Login() {
   const navigate = useNavigate();
-  const [formData, setFormData] = useState({
-    email: "",
-    password: "",
-  });
+  const { setAuth } = useContext(AuthContext);
+  const [formData, setFormData] = useState({ email: "", password: "" });
 
-  const handleChange = (e) => {
+  const handleChange = (e) =>
     setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    try {
+      const res = await api.post("/auth/login", formData);
 
-    // TODO: Call backend login API and get user + token + role
-    console.log("Logging in with:", formData);
+      const data = res.data; 
 
-    // Simulated login (replace this with real API logic)
-    const dummyResponse = {
-      success: true,
-      role: formData.email.includes("admin") ? "admin" : "teacher",
-    };
+      setAuth({ token: data.token, user: data.user });
 
-    if (dummyResponse.success) {
-      // Redirect based on role
-      if (dummyResponse.role === "admin") {
-        navigate("/admin/dashboard");
-      } else {
-        navigate("/teacher/dashboard");
+      // IMPORTANT: use your actual routes
+      if (data.user.role === "admin"){
+         navigate("/admin-dashboard");
+         localStorage.setItem("token", res.data.token);
+localStorage.setItem("user", JSON.stringify(res.data.user)); 
       }
-    } else {
-      alert("Invalid credentials");
+      else {
+        navigate("/teacher-dashboard")
+        localStorage.setItem("token", res.data.token);
+localStorage.setItem("user", JSON.stringify(res.data.user)); 
+      }
+    } catch (err) {
+      console.error(err);
+      alert(err?.response?.data?.message || "Login failed");
     }
   };
 
@@ -57,7 +59,6 @@ export default function Login() {
               className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring focus:ring-blue-200"
             />
           </div>
-         
 
           <div>
             <label className="block text-gray-700 mb-1">Password</label>
@@ -72,20 +73,14 @@ export default function Login() {
             />
           </div>
 
-          <button
-            type="submit"
-            className="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition"
-          >
+          <button type="submit" className="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition">
             Login
           </button>
         </form>
 
         <p className="text-center text-sm text-gray-600">
           Don’t have an account?{" "}
-          <span
-            className="text-blue-600 font-medium cursor-pointer hover:underline"
-            onClick={() => navigate("/signup")}
-          >
+          <span className="text-blue-600 font-medium cursor-pointer hover:underline" onClick={() => navigate("/signup")}>
             Sign Up
           </span>
         </p>
@@ -93,5 +88,3 @@ export default function Login() {
     </div>
   );
 }
-
-
