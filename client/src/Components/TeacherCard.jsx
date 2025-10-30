@@ -241,6 +241,9 @@
 import React, { useEffect, useState } from "react";
 import ProfileImage from "../assets/icon-7797704_640.png";
 import axios from "axios";
+import { useNavigate } from 'react-router-dom';
+
+
 
 const TeacherCard = () => {
   const [teachers, setTeachers] = useState([]);
@@ -250,7 +253,8 @@ const TeacherCard = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedSubject, setSelectedSubject] = useState("All");
   const teachersPerPage = 6; // Show 6 teachers per page
-  
+
+const navigate = useNavigate();
   const subjects = ["All", "Math", "Science", "English", "History", "Computer Science"];
 
   useEffect(() => {
@@ -410,9 +414,17 @@ const TeacherCard = () => {
                   </div>
 
                   {/* Action Button */}
-                  <button className="relative px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-2xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300">
+                  {/* <button className="relative px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-2xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300">
                     <span className="relative z-10">View Profile</span>
-                  </button>
+                  </button> */}
+
+                  <button 
+  onClick={() => navigate(`/admin/teacher/${teacher.teacher_id}`)}
+  className="relative px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-2xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300"
+>
+  <span className="relative z-10">View Profile</span>
+</button>
+
                 </div>
               </div>
             ))

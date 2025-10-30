@@ -1,14 +1,30 @@
-const express = require('express');
-require('dotenv').config();
+// protectedRoutes.js
+import express from "express";
+import { verifyToken, adminOnly, teacherOnly } from "../middleware/authMiddleware.js";
+import { 
+  getSectionTimetable, 
+  getSectionTeachers 
+} from "../controllers/timetableController.js";
+
 const router = express.Router();
-const { verifyToken, adminOnly ,teacherOnly  } = require('../middleware/authMiddleware');
 
-router.get('/admin/dashboard', verifyToken, adminOnly, (req, res) => {
-  res.json({ message: 'Welcome to the admin dashboard', user: req.user });
+// Dashboard routes
+router.get("/admin/dashboard", verifyToken, adminOnly, (req, res) => {
+  res.json({ 
+    message: "Welcome to the admin dashboard", 
+    user: req.user 
+  });
 });
 
-router.get('/teacher/dashboard', verifyToken, teacherOnly, (req, res) => {
-  res.json({ message: 'Welcome to the teacher dashboard', user: req.user });
+router.get("/teacher/dashboard", verifyToken, teacherOnly, (req, res) => {
+  res.json({ 
+    message: "Welcome to the teacher dashboard", 
+    user: req.user 
+  });
 });
 
-module.exports = router;
+// Timetable routes - using SQL database controllers
+router.get("/timetable/:standard/:section", verifyToken, getSectionTimetable);
+router.get("/timetable/:standard/:section/teachers", verifyToken, getSectionTeachers);
+
+export default router;

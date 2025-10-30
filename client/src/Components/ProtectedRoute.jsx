@@ -1,24 +1,4 @@
 
-// import { useContext } from "react";
-// import { Navigate } from "react-router-dom";
-// import { AuthContext } from "../context/AuthContext";
-
-// export default function ProtectedRoute({ children, role }) {
-//   const { auth, loading } = useContext(AuthContext);
-
-//   if (loading) return <div>Loading...</div>; // ✅ Wait until check done
-
-//   if (!auth?.token) {
-//     return <Navigate to="/" replace />; // not logged in → go login
-//   }
-
-//   if (role && auth?.user?.role && auth.user.role !== role) {
-//     return <Navigate to="/not-found" replace />; // wrong role
-//   }
-
-//   return children; // ✅ allow
-// }
-
 
 import { useContext } from "react";
 import { Navigate } from "react-router-dom";
@@ -40,6 +20,5 @@ export default function ProtectedRoute({ children, role }) {
     return <Navigate to="/unauthorized" replace />;
   }
 
-  // ✅ Passed all checks → show page
   return children;
 }
