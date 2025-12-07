@@ -58,14 +58,29 @@ const StandardPage = () => {
           </div>
 
           {/* Divider + Edit Button */}
-          <div className="hidden lg:flex flex-col items-center justify-start border-l pl-6">
+          {/* <div className="hidden lg:flex flex-col items-center justify-start border-l pl-6">
             <button
               onClick={() => navigate(`/standard/${std}/edit`)}
               className="px-6 py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-medium rounded-lg shadow-lg transition-all duration-200 hover:scale-105"
             >
               ✏️ Edit Sections
             </button>
-          </div>
+          </div> */}
+          <div className="hidden lg:flex flex-col items-center justify-start border-l pl-6 gap-4">
+  <button
+    onClick={() => navigate(`/standard/${std}/bulk-create`)}
+    className="px-6 py-3 bg-gradient-to-r from-emerald-600 to-green-600 hover:from-emerald-700 hover:to-green-700 text-white font-medium rounded-lg shadow-lg transition-all duration-200 hover:scale-105"
+  >
+    🚀 Bulk Create Timetables
+  </button>
+  
+  <button
+    onClick={() => navigate(`/standard/${std}/edit`)}
+    className="px-6 py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-medium rounded-lg shadow-lg transition-all duration-200 hover:scale-105"
+  >
+    ✏️ Edit Sections
+  </button>
+</div>
         </div>
       </div>
     </main>

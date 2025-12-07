@@ -1,5 +1,4 @@
-// // backend/routes/timetable.js
-// // REPLACE YOUR ENTIRE FILE WITH THIS
+
 
 // import express from "express";
 // import {
@@ -16,18 +15,18 @@
 
 // const router = express.Router();
 
-// // Test route FIRST to verify routes are loaded
+// console.log("🔧 Loading timetable routes...");
+
+// // Test route
 // router.get("/test", (req, res) => {
-//   console.log("✅ Timetable test route hit!");
-//   res.json({ message: "Timetable routes are working!" });
+//   console.log("✅ Test route hit!");
+//   res.json({ message: "Timetable routes working!" });
 // });
 
-// // Get timetable for a specific section
-// // URL: GET /api/timetable/10th/A
+// // Get timetable for section
 // router.get("/:standard/:section", verifyToken, getSectionTimetable);
 
-// // Get teachers for a section  
-// // URL: GET /api/timetable/10th/A/teachers
+// // Get teachers for section
 // router.get("/:standard/:section/teachers", verifyToken, getSectionTeachers);
 
 // // Admin routes
@@ -38,9 +37,12 @@
 // router.put("/schedules/:schedule_id", verifyToken, adminOnly, updateSchedule);
 // router.delete("/schedules/:schedule_id", verifyToken, adminOnly, deleteSchedule);
 
-// console.log("✅ Timetable routes loaded");
+// console.log("✅ Timetable routes loaded successfully");
 
 // export default router;
+
+// backend/routes/timetable.js - ADD THESE LINES
+// backend/routes/timetable.js - COMPLETE FILE
 
 import express from "express";
 import {
@@ -53,6 +55,13 @@ import {
   deleteSchedule,
   getAllSubjects
 } from "../controllers/timetableController.js";
+
+// ✅ ADD THIS IMPORT
+import {
+  bulkCreateTimetable,
+  getAvailableTeachersForBulk
+} from "../controllers/bulkTimetableController.js";
+
 import { verifyToken, adminOnly } from "../middleware/authMiddleware.js";
 
 const router = express.Router();
@@ -65,19 +74,21 @@ router.get("/test", (req, res) => {
   res.json({ message: "Timetable routes working!" });
 });
 
-// Get timetable for section
-router.get("/:standard/:section", verifyToken, getSectionTimetable);
+// ✅ BULK CREATION ROUTES - MUST BE BEFORE /:standard/:section
+router.post("/bulk-create", verifyToken, adminOnly, bulkCreateTimetable);
+router.get("/teachers-grouped", verifyToken, adminOnly, getAvailableTeachersForBulk);
 
-// Get teachers for section
-router.get("/:standard/:section/teachers", verifyToken, getSectionTeachers);
-
-// Admin routes
+// Admin routes - BEFORE dynamic params
 router.get("/teachers/available", verifyToken, adminOnly, getAvailableTeachers);
 router.get("/subjects", verifyToken, getAllSubjects);
 router.post("/classes/assign", verifyToken, adminOnly, assignTeacherToClass);
 router.post("/schedules", verifyToken, adminOnly, createSchedule);
 router.put("/schedules/:schedule_id", verifyToken, adminOnly, updateSchedule);
 router.delete("/schedules/:schedule_id", verifyToken, adminOnly, deleteSchedule);
+
+// Dynamic routes - MUST BE LAST (otherwise they catch everything)
+router.get("/:standard/:section", verifyToken, getSectionTimetable);
+router.get("/:standard/:section/teachers", verifyToken, getSectionTeachers);
 
 console.log("✅ Timetable routes loaded successfully");
 

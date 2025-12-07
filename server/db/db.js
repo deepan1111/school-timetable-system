@@ -1,41 +1,54 @@
 
 
-// const mysql = require("mysql2/promise");
-// require("dotenv").config();
+// // const mysql = require("mysql2/promise");
+// // require("dotenv").config();
+
+// // const db = mysql.createPool({
+// //   host: process.env.DB_HOST,
+// //   user: process.env.DB_USER,
+// //   password: process.env.DB_PASS,
+// //   database: process.env.DB_NAME
+// // });
+
+// // module.exports = db;
+
+
+// import mysql from "mysql2/promise";
+// import dotenv from "dotenv";
+
+// dotenv.config();
 
 // const db = mysql.createPool({
 //   host: process.env.DB_HOST,
 //   user: process.env.DB_USER,
 //   password: process.env.DB_PASS,
-//   database: process.env.DB_NAME
+//   database: process.env.DB_NAME,
+//   waitForConnections: true,
+//   connectionLimit: 10,
+//   queueLimit: 0,
 // });
 
-// module.exports = db;
+// // Test connection
+// db.getConnection()
+//   .then((connection) => {
+//     console.log("✅ MySQL Database Connected");
+//     connection.release();
+//   })
+//   .catch((err) => {
+//     console.error("❌ MySQL Connection Error:", err);
+//   });
 
+// export default db;
 
 import mysql from "mysql2/promise";
 import dotenv from "dotenv";
-
 dotenv.config();
 
-const db = mysql.createPool({
-  host: process.env.DB_HOST,
-  user: process.env.DB_USER,
-  password: process.env.DB_PASS,
-  database: process.env.DB_NAME,
-  waitForConnections: true,
-  connectionLimit: 10,
-  queueLimit: 0,
+const db = await mysql.createConnection({
+  uri: process.env.DATABASE_URL,
+  ssl: { rejectUnauthorized: false }
 });
 
-// Test connection
-db.getConnection()
-  .then((connection) => {
-    console.log("✅ MySQL Database Connected");
-    connection.release();
-  })
-  .catch((err) => {
-    console.error("❌ MySQL Connection Error:", err);
-  });
+console.log("✅ MySQL Database Connected");
 
 export default db;
