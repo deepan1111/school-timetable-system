@@ -46,9 +46,7 @@ dotenv.config();
 
 const db = mysql.createPool({
   uri: process.env.DATABASE_URL,
-  ssl: {
-    rejectUnauthorized: false
-  },
+  ssl: { rejectUnauthorized: false }, // ✅ crucial for Railway
   waitForConnections: true,
   connectionLimit: 10,
   queueLimit: 0,
@@ -62,7 +60,7 @@ const db = mysql.createPool({
     connection.release();
   } catch (err) {
     console.error("❌ MySQL Connection Error:", err.message);
-    process.exit(1);
+    process.exit(1); // crash if DB fails
   }
 })();
 
