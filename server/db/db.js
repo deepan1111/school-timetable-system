@@ -41,23 +41,29 @@
 // export default db;
 import mysql from "mysql2/promise";
 import dotenv from "dotenv";
+
 dotenv.config();
 
-let db;
+const db = mysql.createPool({
+  uri: process.env.DATABASE_URL,
+  ssl: {
+    rejectUnauthorized: false
+  },
+  waitForConnections: true,
+  connectionLimit: 10,
+  queueLimit: 0,
+});
 
-async function connectDB() {
+// Test connection
+(async () => {
   try {
-    db = await mysql.createConnection({
-      uri: process.env.DATABASE_URL,
-      ssl: { rejectUnauthorized: false }
-    });
+    const connection = await db.getConnection();
     console.log("✅ MySQL Database Connected");
+    connection.release();
   } catch (err) {
     console.error("❌ MySQL Connection Error:", err.message);
-    process.exit(1); // Exit if DB fails
+    process.exit(1);
   }
-}
-
-await connectDB();
+})();
 
 export default db;
