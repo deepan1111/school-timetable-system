@@ -44,24 +44,27 @@ import dotenv from "dotenv";
 
 dotenv.config();
 
-const db = mysql.createPool({
-  uri: process.env.DATABASE_URL,
-  ssl: { rejectUnauthorized: false }, // ✅ crucial for Railway
-  waitForConnections: true,
-  connectionLimit: 10,
-  queueLimit: 0,
-});
+let db;
 
-// Test connection
-(async () => {
+async function connectDB() {
   try {
+    db = await mysql.createPool({
+      uri: process.env.DATABASE_URL,
+      ssl: { rejectUnauthorized: false },
+      waitForConnections: true,
+      connectionLimit: 10,
+      queueLimit: 0,
+    });
+
     const connection = await db.getConnection();
     console.log("✅ MySQL Database Connected");
     connection.release();
   } catch (err) {
     console.error("❌ MySQL Connection Error:", err.message);
-    process.exit(1); // crash if DB fails
+    console.log("🔁 Retrying in 5 seconds...");
+    setTimeout(connectDB, 5000); // Retry instead of crashing server
   }
-})();
+}
 
+connectDB();
 export default db;
